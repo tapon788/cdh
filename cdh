@@ -1,0 +1,189 @@
+#!/usr/bin/python
+
+from Tkinter import *
+import commands
+
+demoModules=['cbdlpc','sc']
+parts=[]
+demoModules2=['tf','disp']
+parts2=[]
+def addComponents(root):
+    for demo in demoModules:
+        module = __import__(demo)                      # import by name string
+        part = module.Demo(root)                      # attach an instance
+        part.config(bd=2, relief=GROOVE)
+        part.pack(side=TOP)
+        parts.append(part)
+  
+def addComponents2(root):
+    for demo in demoModules2:
+        module = __import__(demo)                      # import by name string
+        part = module.Demo(root)                      # attach an instance
+        part.config(bd=2, relief=GROOVE)
+        part.pack(side=TOP, fill=BOTH)
+        parts2.append(part)
+
+
+def get_value( ):
+    cdh=parts[0].c_d_h()
+    site_id=parts[1].si()
+    cell_no=parts[1].cn()
+    true_false=parts2[0].t_f()
+
+    if cdh[0] == 1 and cdh[1] ==1 and cdh[2] ==1:
+	
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',"SELECTION ERROR!")
+	
+
+
+    elif cdh[0] == 0 and cdh[1] ==0 and cdh[2] ==0:
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',"NOTHING SELECTED")
+
+
+    elif cdh[0] == 1 and cdh[1] ==0 and cdh[2] ==0:
+	cb_check="get_cb "+site_id+" "+cell_no
+	get_output=commands.getoutput(cb_check)
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',get_output)
+	#if true_false == "true":
+	 #    print "Set bts:"+site_id+"/bts:"+cell_no+",cellbarr="+true_false+",enancd=disabled,ncdp1=H0-144;" 
+ 	#else:
+	 #    print "Set bts:"+site_id+"/bts:"+cell_no+",cellbarr="+true_false+",enancd=enabled,ncdp1=H0-6;" 
+ 	  
+
+
+    elif cdh[0] == 0 and cdh[1] ==1 and cdh[2] ==1:
+
+	dlpc_hopp_check="get_dlpc_hopp "+site_id+" "+cell_no
+	get_output=commands.getoutput(dlpc_hopp_check)
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',get_output)
+	#if true_false == "true":
+	 #    print "dlpc "+site_id+" "+cell_no+" ADAPTIVE " + true_false
+	#else:
+	 #    print "dlpc "+site_id+" "+cell_no+" disabled " + true_false
+    elif cdh[0] == 0 and cdh[1] ==1 and cdh[2] ==0:
+
+	
+	dlpc_check="get_dlpc "+site_id+" "+cell_no
+	get_output=commands.getoutput(dlpc_check)
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',get_output)
+	#if true_false == "true": 
+	 #    print "dlpc "+site_id+" "+cell_no+" ADAPTIVE -1"
+	#else:
+	#     print "dlpc "+site_id+" "+cell_no+" disabled -1"
+    elif cdh[0] == 0 and cdh[1] ==0 and cdh[2] ==1:
+	#if true_false == "true": 
+	 #    print "dlpc "+site_id+" "+cell_no+" -1 " + true_false
+	#else:
+	 #    print "dlpc "+site_id+" "+cell_no+" -1 " + true_false
+	
+	hopp_check="get_hopp "+site_id+" "+cell_no
+	get_output=commands.getoutput(hopp_check)
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',get_output)
+
+
+
+
+def set_value( ):
+    cdh=parts[0].c_d_h()
+    site_id=parts[1].si()
+    cell_no=parts[1].cn()
+    true_false=parts2[0].t_f()
+
+    if cdh[0] == 1 and cdh[1] ==1 and cdh[2] ==1:
+	
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',"SELECTION ERROR!")
+	
+
+
+    elif cdh[0] == 0 and cdh[1] ==0 and cdh[2] ==0:
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',"NOTHING SELECTED")
+
+
+    elif cdh[0] == 1 and cdh[1] ==0 and cdh[2] ==0:
+	
+	
+	if true_false == "true":
+	     enancd="disabled"
+	     ncdp1="H0-6"
+	     set_cb="set_cb "+site_id+" "+cell_no+" "+true_false+" "+enancd+" "+ncdp1
+	     get_output=commands.getoutput(set_cb)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+ 	else:
+	     #print "Set bts:"+site_id+"/bts:"+cell_no+",cellbarr="+true_false+",enancd=enabled,ncdp1=H0-144;" 
+ 	     enancd="enabled"
+	     ncdp1="H0-144"
+	     set_cb="set_cb "+site_id+" "+cell_no+" "+true_false+" "+enancd+" "+ncdp1
+	     get_output=commands.getoutput(set_cb)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+
+
+
+    elif cdh[0] == 0 and cdh[1] ==1 and cdh[2] ==1:
+
+	if true_false == "true":
+	     set_dlpc_hopp="dlpc "+site_id+" "+cell_no+" ADAPTIVE " + true_false
+	     get_output=commands.getoutput(set_dlpc_hopp)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+	else:
+	     
+	     set_dlpc_hopp="dlpc "+site_id+" "+cell_no+" disabled " + true_false
+	     get_output=commands.getoutput(set_dlpc_hopp)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+    elif cdh[0] == 0 and cdh[1] ==1 and cdh[2] ==0:
+
+	if true_false == "true": 
+	     set_dlpc="dlpc "+site_id+" "+cell_no+" ADAPTIVE -1"
+	     get_output=commands.getoutput(set_dlpc)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+	else:
+	     set_dlpc="dlpc "+site_id+" "+cell_no+" disabled -1"
+	     get_output=commands.getoutput(set_dlpc)
+	     parts2[1].x.delete('0.0',END)
+	     parts2[1].x.insert('0.0',get_output)
+
+    elif cdh[0] == 0 and cdh[1] ==0 and cdh[2] ==1:
+	
+	set_hopp="dlpc "+site_id+" "+cell_no+" -1 "+true_false
+	get_output=commands.getoutput(set_hopp)
+	parts2[1].x.delete('0.0',END)
+	parts2[1].x.insert('0.0',get_output)
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+root = Tk( )                                          # default toplevel window
+root.config(bg="#fdaaaf")
+#Label(root, text='Multiple Frame demo', bg='white').pack( )
+addComponents(root)
+check_button=Button(root, text='C h e c k',command=get_value)
+check_button.config(bd=5,bg="#ddddaa",font=("verdena",12,'bold'))
+check_button.pack(fill=X)
+addComponents2(root)
+set_button=Button(root,text='S  e  t',command=set_value)
+set_button.config(bd=5,bg="#aaffaa",font=("verdena",12,'bold'))
+set_button.pack(fill=X)
+
+
+mainloop( )
